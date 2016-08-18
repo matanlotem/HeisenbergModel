@@ -8,9 +8,10 @@
 #ifndef SZHAMILTONIAN_HPP_
 #define SZHAMILTONIAN_HPP_
 #include <string>
+#include "genHamiltonian.hpp"
 #include "szBasis.hpp"
 
-class szHamiltonian {
+class szHamiltonian : public genHamiltonian<double> {
 protected:
 	int N;
 	int SzUp;

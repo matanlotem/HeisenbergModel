@@ -110,19 +110,19 @@ void szBasis::newState(double* state) {
 		state[i] = 0;
 }
 
-void szBasis::newState(double* state, int basisStateIndex) {
+void szBasis::newState(double* state, int basisIndex) {
 	newState(state);
-	state[basisStateIndex] = 1;
+	state[basisIndex] = 1;
 }
 
 void szBasis::copyState(double* inputState, double* outputState) {
-	for (int i = 0; i < combs; i++)
+	for (int i = 0; i < getLen(); i++)
 		outputState[i] = inputState[i];
 }
 
 double szBasis::scalarProd(double* state1, double* state2) {
 	double prod = 0;
-	for (int i = 0; i < combs; i++)
+	for (int i = 0; i < getLen(); i++)
 		prod += state1[i] * state2[i];
 	return prod;
 }
@@ -131,15 +131,15 @@ double szBasis::getStateNorm(double* state) {
 	return sqrt(scalarProd(state, state));
 }
 
-double szBasis::normalizeState(int size, double* state) {
+double szBasis::normalizeState(double* state) {
 	double norm = getStateNorm(state);
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < getLen(); i++)
 		state[i] = state[i] / norm;
 	return norm;
 }
 
 void szBasis::printState(double* state) {
-	for (int i = 0; i < combs; i++)
+	for (int i = 0; i < getLen(); i++)
 		printf("%+.3f\t", state[i]);
 	printf("\n");
 }

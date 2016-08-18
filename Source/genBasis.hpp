@@ -9,13 +9,16 @@
 #define SOURCE_GENBASIS_HPP_
 
 
+template <class T>
 class genBasis {
 public:
-	int getLen();
-	void copyMixedState(double* inputState, double* outputState);
-	double scalarProd(double* state1, double* state2);
-	double getMixedStateNorm(double* state);
+	virtual int getLen() = 0;
+	virtual void newState(T* state) = 0;
+	virtual void newState(T* state, int ) = 0;
+	virtual void copyState(T* inputState, T* outputState) = 0;
+	virtual T scalarProd(T* state1, T* state2) = 0;
+	virtual double getStateNorm(T* state) = 0;
+	virtual void printState(T* state) = 0;
 };
-
 
 #endif /* SOURCE_GENBASIS_HPP_ */

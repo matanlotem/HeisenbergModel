@@ -8,9 +8,11 @@
 #ifndef SZTRANSHAMILTONIAN_HPP_
 #define SZTRANSHAMILTONIAN_HPP_
 #include <string>
+#include <complex>
+#include "genHamiltonian.hpp"
 #include "szTransBasis.hpp"
 
-class szTransHamiltonian {
+class szTransHamiltonian : public genHamiltonian<std::complex<double> >{
 protected:
 	int N;
 	int K;

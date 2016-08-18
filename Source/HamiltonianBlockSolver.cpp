@@ -15,9 +15,13 @@
 #include <ctime>
 
 #include "utils.hpp"
-#include "szHamiltonian.hpp"
+//#include "szHamiltonian.hpp"
+//#include "szBasis.hpp"
+#include "genBasis.hpp"
+#include "genHamiltonian.hpp"
+
 #include "HamiltonianBlockSolver.hpp"
-#include "szBasis.hpp"
+
 
 
 extern "C" void dsaupd_(int *ido, char *bmat, int *n, char *which,
@@ -34,7 +38,7 @@ extern "C" void dseupd_(int *rvec, char *All, int *select, double *d,
 	double *workl, int *lworkl, int *ierr);
 
 
-HamiltonianBlockSolver::HamiltonianBlockSolver(szBasis* b, szHamiltonian* h): basis(b), Hamiltonian(h) {}
+HamiltonianBlockSolver::HamiltonianBlockSolver(genBasis<double>* b, genHamiltonian<double>* h): basis(b), Hamiltonian(h) {}
 
 void HamiltonianBlockSolver::exactSolve(double* EigenValues) {
 	exactSolve(EigenValues, NULL);

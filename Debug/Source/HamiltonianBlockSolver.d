@@ -1,11 +1,11 @@
 Source/HamiltonianBlockSolver.o: ../Source/HamiltonianBlockSolver.cpp \
- ../Source/utils.hpp ../Source/szHamiltonian.hpp ../Source/szBasis.hpp \
+ ../Source/utils.hpp ../Source/genBasis.hpp ../Source/genHamiltonian.hpp \
  ../Source/HamiltonianBlockSolver.hpp
 
 ../Source/utils.hpp:
 
-../Source/szHamiltonian.hpp:
+../Source/genBasis.hpp:
 
-../Source/szBasis.hpp:
+../Source/genHamiltonian.hpp:
 
 ../Source/HamiltonianBlockSolver.hpp:

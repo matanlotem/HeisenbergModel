@@ -9,10 +9,10 @@
 #define SZTRANSBASIS_HPP_
 
 #include <complex>
-
+#include "genBasis.hpp"
 #include "szBasis.hpp"
 
-class szTransBasis {
+class szTransBasis : public genBasis<std::complex<double> >{
 private:
 	int N;
 	int SzUp;

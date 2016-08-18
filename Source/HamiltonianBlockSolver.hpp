@@ -7,13 +7,15 @@
 
 #ifndef HAMILTONIANBLOCKSOLVER_HPP_
 #define HAMILTONIANBLOCKSOLVER_HPP_
+#include "genBasis.hpp"
+#include "genHamiltonian.hpp"
 
 class HamiltonianBlockSolver {
 private:
-	szBasis * basis;
-	szHamiltonian * Hamiltonian;
+	genBasis<double> * basis;
+	genHamiltonian<double> * Hamiltonian;
 public:
-	HamiltonianBlockSolver(szBasis * b, szHamiltonian * h);
+	HamiltonianBlockSolver(genBasis<double> * b, genHamiltonian<double> * h);
 
 	void exactSolve(double* EigenValues);
 	void exactSolve(double* EigenValues, double** EigenVectors);
