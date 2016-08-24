@@ -7,22 +7,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <string>
-#include <ctime>
+#include <complex>
 
 #include "utils.hpp"
-//#include "szHamiltonian.hpp"
-//#include "szBasis.hpp"
 #include "genBasis.hpp"
 #include "genHamiltonian.hpp"
-
 #include "HamiltonianBlockSolver.hpp"
-
-
 
 extern "C" void dsaupd_(int *ido, char *bmat, int *n, char *which,
 	int *nev, double *tol, double *resid, int *ncv,
@@ -31,24 +25,39 @@ extern "C" void dsaupd_(int *ido, char *bmat, int *n, char *which,
 	int *info);
 
 extern "C" void dseupd_(int *rvec, char *All, int *select, double *d,
-	double *v, int *ldv, double *sigma,
+	double *Z, int *ldz, double *sigma,
 	char *bmat, int *n, char *which, int *nev,
-	double *tol, double *resid, int *ncv, double *V, //v -> V
-	int *ldV, int *iparam, int *ipntr, double *workd, //ldv -> ldV
+	double *tol, double *resid, int *ncv, double *V,
+	int *ldv, int *iparam, int *ipntr, double *workd,
 	double *workl, int *lworkl, int *ierr);
 
+extern "C" void znaupd_(int *ido, char *bmat, int *n, char *which,
+	int *nev, double *tol, std::complex<double> *resid, int *ncv,
+	std::complex<double> *v, int *ldv, int *iparam, int *ipntr,
+	std::complex<double> *workd, std::complex<double> *workl, int *lworkl,
+	double *rwork, int *info);
 
-HamiltonianBlockSolver::HamiltonianBlockSolver(genBasis<double>* b, genHamiltonian<double>* h): basis(b), Hamiltonian(h) {}
+extern "C" void zneupd_(int *rvec, char *All, int *select, std::complex<double> *d,
+	std::complex<double> *Z, int *ldz, std::complex<double> *sigma,
+	std::complex<double> *workev, char *bmat, int *n, char *which, int *nev,
+	double *tol, std::complex<double> *resid, int *ncv, std::complex<double> *V,
+	int *ldv, int *iparam, int *ipntr, std::complex<double> *workd,
+	std::complex<double> *workl, int *lworkl, double *rwork, int *ierr);
 
-void HamiltonianBlockSolver::exactSolve(double* EigenValues) {
+template <class T>
+HamiltonianBlockSolver<T>::HamiltonianBlockSolver(genBasis<T>* b, genHamiltonian<T>* h): basis(b), Hamiltonian(h) {}
+
+template <class T>
+void HamiltonianBlockSolver<T>::exactSolve(double* EigenValues) {
 	exactSolve(EigenValues, NULL);
 }
 
-void HamiltonianBlockSolver::exactSolve(double* EigenValues, double** EigenVectors) {
+template <class T>
+void HamiltonianBlockSolver<T>::exactSolve(double* EigenValues, T** EigenVectors) {
 	int len = basis->getLen();
 
-	double** HMatrix = new double*[len];
-	HMatrix[0] = new double[len*len];
+	T** HMatrix = new T*[len];
+	HMatrix[0] = new T[len*len];
 	for (int i = 1; i < len; i++) HMatrix[i] = HMatrix[i - 1] + len;
 
 	Hamiltonian->toMatrix(HMatrix);
@@ -66,27 +75,32 @@ void HamiltonianBlockSolver::exactSolve(double* EigenValues, double** EigenVecto
 	delete[] HMatrix;
 }
 
-int HamiltonianBlockSolver::naiveLanczos(double* EigenValues, int numOfEv, int iterations, double* baseState) {
+template <class T>
+int HamiltonianBlockSolver<T>::naiveLanczos(double* EigenValues, int numOfEv, int iterations, T* baseState) {
 	//return naiveLanczos(EigenValues, numOfEv, iterations, baseState, 0.00000000000001);
 	return naiveLanczos(EigenValues, NULL, numOfEv, iterations, baseState);
 }
 
-int HamiltonianBlockSolver::naiveLanczos(double* EigenValues, double** EigenVectors, int numOfEv, int iterations, double* baseState) {
+template <class T>
+int HamiltonianBlockSolver<T>::naiveLanczos(double* EigenValues, T** EigenVectors, int numOfEv, int iterations, T* baseState) {
 	return naiveLanczos(EigenValues, EigenVectors, numOfEv, iterations, baseState, 0.00000000000001);
 }
 
-int HamiltonianBlockSolver::naiveLanczos(double* EigenValues, int numOfEv, int iterations, double* baseState, double precision) {
+template <class T>
+int HamiltonianBlockSolver<T>::naiveLanczos(double* EigenValues, int numOfEv, int iterations, T* baseState, double precision) {
 	return naiveLanczos(EigenValues, NULL, numOfEv, iterations, baseState, precision);
 }
-int HamiltonianBlockSolver::naiveLanczos(double* EigenValues, double** EigenVectors, int numOfEv, int iterations, double* baseState, double precision) {
+
+template <class T>
+int HamiltonianBlockSolver<T>::naiveLanczos(double* EigenValues, T** EigenVectors, int numOfEv, int iterations, T* baseState, double precision) {
 	int m = iterations;
 	int len = basis->getLen();
 	int iterCheckConv = 10;
 
 	// generate empty Krylov space matrix
 	printf("  generating empty Krylov space matrix\n");
-	double** KMatrix = new double*[m];
-	KMatrix[0] = new double[m*m];
+	T** KMatrix = new T*[m];
+	KMatrix[0] = new T[m*m];
 	for (int i = 1; i < m; i++) KMatrix[i] = KMatrix[i - 1] + m;
 
 	for (int i = 0; i < m; i++)
@@ -98,12 +112,13 @@ int HamiltonianBlockSolver::naiveLanczos(double* EigenValues, double** EigenVect
 	for (int i=0; i<prevN; i++) prevEigenValues[i] = 0;
 
 	// generate initial parameters
-	double* prevState = new double[len];
-	double* currentState = new double[len];
+	T* prevState = new T[len];
+	T* currentState = new T[len];
 	basis->copyState(baseState, currentState);
-	double* tmpState = new double[len];
+	T* tmpState = new T[len];
 
-	double a, b2, norm, tmp;
+	T a, b2, tmp;
+	double norm;
 
 	// populate Krylov space matrix
 	printf("  populating Krylov space matrix\n");
@@ -177,8 +192,8 @@ int HamiltonianBlockSolver::naiveLanczos(double* EigenValues, double** EigenVect
 	// diagnolize Krylov space matrix
 	printf("  diagonalizing Krylov space matrix\n");
 	double* KEigenValues = new double[m];
-	double** newKMatrix = new double*[m];
-	newKMatrix[0] = new double[m*m];
+	T** newKMatrix = new T*[m];
+	newKMatrix[0] = new T[m*m];
 	for (int i = 1; i < m; i++) newKMatrix[i] = newKMatrix[i - 1] + m;
 
 	for (int i = 0; i < m; i++)
@@ -260,19 +275,28 @@ int HamiltonianBlockSolver::naiveLanczos(double* EigenValues, double** EigenVect
 	return m;
 }
 
-int HamiltonianBlockSolver::arpackLanczos(double* EigenValues, int numOfEv, int iterations, double* baseState) {
+template <class T>
+int HamiltonianBlockSolver<T>::arpackLanczos(double* EigenValues, int numOfEv, int iterations, T* baseState) {
 	return arpackLanczos(EigenValues, NULL, numOfEv, iterations, baseState);
 }
 
-int HamiltonianBlockSolver::arpackLanczos(double* EigenValues, double** EigenVectors, int numOfEv, int iterations, double* baseState) {
+template <class T>
+int HamiltonianBlockSolver<T>::arpackLanczos(double* EigenValues, T** EigenVectors, int numOfEv, int iterations, T* baseState) {
 	return arpackLanczos(EigenValues, EigenVectors, numOfEv, iterations, baseState, 0.0, -1);
 }
 
-int HamiltonianBlockSolver::arpackLanczos(double* EigenValues, int numOfEv, int iterations, double* baseState ,double precision, int resetIters) {
+template <class T>
+int HamiltonianBlockSolver<T>::arpackLanczos(double* EigenValues, int numOfEv, int iterations, T* baseState ,double precision, int resetIters) {
 	return arpackLanczos(EigenValues, NULL, numOfEv, iterations, baseState, precision, resetIters);
 }
 
-int HamiltonianBlockSolver::arpackLanczos(double* EigenValues, double** EigenVectors, int numOfEv, int iterations, double* baseState ,double precision, int resetIters) {
+template <class T>
+int HamiltonianBlockSolver<T>::arpackLanczos(double* EigenValues, T** EigenVectors, int numOfEv, int iterations, T* baseState ,double precision, int resetIters) {
+	return 0;
+}
+
+template <>
+int HamiltonianBlockSolver<double>::arpackLanczos(double* EigenValues, double** EigenVectors, int numOfEv, int iterations, double* baseState ,double precision, int resetIters) {
 	printf("  running arpack Lanczos\n");
 	int nev = numOfEv; // The number of values to calculate
 	int n = basis->getLen();
@@ -403,7 +427,145 @@ int HamiltonianBlockSolver::arpackLanczos(double* EigenValues, double** EigenVec
 	return counter;
 }
 
-void HamiltonianBlockSolver::printEigenValues(double* EigenValues, int numOfEv) {
+template <>
+int HamiltonianBlockSolver<std::complex<double> >::arpackLanczos(double* EigenValues, std::complex<double>** EigenVectors, int numOfEv, int iterations, std::complex<double>* baseState ,double precision, int resetIters) {
+	printf("  running arpack Lanczos\n");
+	int nev = numOfEv; // The number of values to calculate
+	int n = basis->getLen();
+
+	int ido = 0; /* Initialization of the reverse communication parameter. */
+
+	char bmat[2] = "I";
+	char which[3] = "LM";
+	double tol = precision; /* Sets the tolerance; tol<=0 specifies machine precision
+	 	 	 	 	 	 	 	  0.000000000000001 got max precision;
+	 	 	 	 	 	 	 	  0.0000000001 got 15 significant digits
+	 	 	 	 	 	 	 	 */
+
+	std::complex<double> *resid = new std::complex<double>[n];
+	basis->copyState(baseState,resid);
+
+	int ncv; /* The largest number of basis vectors that will be used in the Implicitly Restarted
+			    Arnoldi Process. Work per major iteration is proportional to N*NCV*NCV. */
+	if (resetIters <= nev) ncv = 4 * nev;
+	else ncv = resetIters;
+	if (ncv>n) ncv = n;
+
+	int ldv = n;
+	std::complex<double> *v = new std::complex<double>[ldv*ncv];
+
+	int *iparam;
+	iparam = new int[11]; /* An array used to pass information to the
+						  routines
+						  about their functional modes. */
+	iparam[0] = 1; // Specifies the shift strategy (1->exact)
+	if (iterations < 0)
+		iparam[2] = 3 * n; // Maximum number of iterations
+	else
+		iparam[2] = iterations;
+
+	iparam[6] = 1; /* Sets the mode of dsaupd.
+				   1 is exact shifting,
+				   2 is user-supplied shifts,
+				   3 is shift-invert mode,
+				   4 is buckling mode,
+				   5 is Cayley mode. */
+
+	int *ipntr;
+	ipntr = new int[14]; /* Indicates the locations in the work array workd
+						 where the input and output vectors in the
+						 callback routine are located. */
+
+	std::complex<double> *workd = new std::complex<double>[3 * n];
+	std::complex<double> *workl = new std::complex<double>[ncv*(3*ncv + 5)];
+	double *rwork = new double[ncv];
+
+	//int lworkl = ncv*(ncv + 8); /* Length of the workl array */
+	int lworkl = ncv*(3*ncv + 5); /* Length of the workl array */
+
+	int info = 1; /* Passes convergence information out of the iteration routine.
+					 0 - random baseState
+					 1 - given baseState
+	 	 	 	 	 */
+
+	int rvec = (EigenVectors != NULL); /* Specifies that eigenvectors should not be calculated */
+
+	int *select = new int[ncv];
+	std::complex<double> *d = new std::complex<double>[nev + 1]; /* This vector will return the eigenvalues from the second routine, zneupd. */
+	std::complex<double> *workev = new std::complex<double>[2 * ncv];
+	std::complex<double> sigma;
+	int ierr;
+	int counter = 0;
+	do {
+		znaupd_(&ido, bmat, &n, which, &nev, &tol, resid,
+			&ncv, v, &ldv, iparam, ipntr, workd, workl,
+			&lworkl, rwork, &info);
+
+		if ((ido == 1) || (ido == -1))
+			Hamiltonian->apply(workd + ipntr[0] - 1, workd + ipntr[1] - 1);
+
+		counter++;
+		/*if (counter % 10 == 0)
+			printf("    %d\n", counter);*/
+
+	} while ((ido == 1) || (ido == -1));
+	printf("  %d iterations\n",counter);
+
+	if (info<0) {
+		std::cout << "Error with znaupd, info = " << info << "\n";
+		std::cout << "Check documentation in znaupd\n\n";
+	}
+	else {
+		zneupd_(&rvec, "All", select, d, v, &ldv, &sigma, workev, bmat,
+			&n, which, &nev, &tol, resid, &ncv, v, &ldv,
+			iparam, ipntr, workd, workl, &lworkl, rwork, &ierr);
+
+		if (ierr != 0) {
+			std::cout << "Error with zneupd, info = " << ierr << "\n";
+			std::cout << "Check the documentation of dseupd.\n\n";
+		}
+		else if (info == 1) {
+			std::cout << "Maximum number of iterations reached.\n\n";
+		}
+		else if (info == 3) {
+			std::cout << "No shifts could be applied during implicit\n";
+			std::cout << "Arnoldi update, try increasing NCV.\n\n";
+		}
+
+		/* Before exiting, we copy the solution information over to
+			the arrays of the calling program, then clean up the
+			memory used by this routine. For some reason, when I
+			don't find the eigenvectors I need to reverse the order of
+			the values. */
+
+
+		if (EigenVectors == NULL)
+			for (int i = 0; i<nev; i++) EigenValues [i] = real(d[nev - 1 - i]);
+		else {
+			for (int i = 0; i<nev; i++) {
+				for (int j=0; j<n; j++) EigenVectors[i][j] = v[i * n + j];
+				EigenValues [i] = real(d[i]);
+			}
+		}
+
+		delete[] resid;
+		delete[] v;
+		delete[] iparam;
+		delete[] ipntr;
+		delete[] workd;
+		delete[] workl;
+		delete[] rwork;
+		delete[] select;
+		delete[] d;
+		delete[] workev;
+	}
+
+	printEigenValues(EigenValues, nev);
+	return counter;
+}
+
+template <class T>
+void HamiltonianBlockSolver<T>::printEigenValues(double* EigenValues, int numOfEv) {
 	printf("  Eigenvalues:\n");
 	for (int i=0; i< numOfEv; i++) printf("\t%.20f\n",EigenValues[i]);
 }

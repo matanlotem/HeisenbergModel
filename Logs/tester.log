@@ -12,31 +12,58 @@ Testing Jxy=1 Jz=1 Hz=0 N=9 (1,1,0,9)
 	Comparing Naive Lanczos / Arpack Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=0    SUCCESS
 		Generated szTransHamiltonian N=9 k=0    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=1    SUCCESS
 		Generated szTransHamiltonian N=9 k=1    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=2    SUCCESS
 		Generated szTransHamiltonian N=9 k=2    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=3    SUCCESS
 		Generated szTransHamiltonian N=9 k=3    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=4    SUCCESS
 		Generated szTransHamiltonian N=9 k=4    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=5    SUCCESS
 		Generated szTransHamiltonian N=9 k=5    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=6    SUCCESS
 		Generated szTransHamiltonian N=9 k=6    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=7    SUCCESS
 		Generated szTransHamiltonian N=9 k=7    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=8    SUCCESS
 		Generated szTransHamiltonian N=9 k=8    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 	Comparing sz basis and szTrans basis eigenvalues    SUCCESS
 Testing Jxy=1 Jz=1 Hz=0 N=10 (1,1,0,10)
 	Generating szBasis    SUCCESS
@@ -52,34 +79,64 @@ Testing Jxy=1 Jz=1 Hz=0 N=10 (1,1,0,10)
 	Comparing Naive Lanczos / Arpack Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=0    SUCCESS
 		Generated szTransHamiltonian N=10 k=0    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=1    SUCCESS
 		Generated szTransHamiltonian N=10 k=1    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=2    SUCCESS
 		Generated szTransHamiltonian N=10 k=2    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=3    SUCCESS
 		Generated szTransHamiltonian N=10 k=3    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=4    SUCCESS
 		Generated szTransHamiltonian N=10 k=4    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=5    SUCCESS
 		Generated szTransHamiltonian N=10 k=5    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=6    SUCCESS
 		Generated szTransHamiltonian N=10 k=6    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=7    SUCCESS
 		Generated szTransHamiltonian N=10 k=7    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=8    SUCCESS
 		Generated szTransHamiltonian N=10 k=8    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=9    SUCCESS
 		Generated szTransHamiltonian N=10 k=9    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 	Comparing sz basis and szTrans basis eigenvalues    SUCCESS
 Testing Jxy=1 Jz=1 Hz=3 N=9 (1,1,3,9)
 	Generating szBasis    SUCCESS
@@ -95,31 +152,58 @@ Testing Jxy=1 Jz=1 Hz=3 N=9 (1,1,3,9)
 	Comparing Naive Lanczos / Arpack Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=0    SUCCESS
 		Generated szTransHamiltonian N=9 k=0    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=1    SUCCESS
 		Generated szTransHamiltonian N=9 k=1    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=2    SUCCESS
 		Generated szTransHamiltonian N=9 k=2    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=3    SUCCESS
 		Generated szTransHamiltonian N=9 k=3    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=4    SUCCESS
 		Generated szTransHamiltonian N=9 k=4    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=5    SUCCESS
 		Generated szTransHamiltonian N=9 k=5    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=6    SUCCESS
 		Generated szTransHamiltonian N=9 k=6    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=7    SUCCESS
 		Generated szTransHamiltonian N=9 k=7    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=8    SUCCESS
 		Generated szTransHamiltonian N=9 k=8    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 	Comparing sz basis and szTrans basis eigenvalues    SUCCESS
 Testing Jxy=1 Jz=1 Hz=3 N=10 (1,1,3,10)
 	Generating szBasis    SUCCESS
@@ -135,34 +219,64 @@ Testing Jxy=1 Jz=1 Hz=3 N=10 (1,1,3,10)
 	Comparing Naive Lanczos / Arpack Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=0    SUCCESS
 		Generated szTransHamiltonian N=10 k=0    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=1    SUCCESS
 		Generated szTransHamiltonian N=10 k=1    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=2    SUCCESS
 		Generated szTransHamiltonian N=10 k=2    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=3    SUCCESS
 		Generated szTransHamiltonian N=10 k=3    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=4    SUCCESS
 		Generated szTransHamiltonian N=10 k=4    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=5    SUCCESS
 		Generated szTransHamiltonian N=10 k=5    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=6    SUCCESS
 		Generated szTransHamiltonian N=10 k=6    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=7    SUCCESS
 		Generated szTransHamiltonian N=10 k=7    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=8    SUCCESS
 		Generated szTransHamiltonian N=10 k=8    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=9    SUCCESS
 		Generated szTransHamiltonian N=10 k=9    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 	Comparing sz basis and szTrans basis eigenvalues    SUCCESS
 Testing Jxy=2 Jz=1 Hz=0 N=9 (2,1,0,9)
 	Generating szBasis    SUCCESS
@@ -178,31 +292,58 @@ Testing Jxy=2 Jz=1 Hz=0 N=9 (2,1,0,9)
 	Comparing Naive Lanczos / Arpack Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=0    SUCCESS
 		Generated szTransHamiltonian N=9 k=0    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=1    SUCCESS
 		Generated szTransHamiltonian N=9 k=1    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=2    SUCCESS
 		Generated szTransHamiltonian N=9 k=2    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=3    SUCCESS
 		Generated szTransHamiltonian N=9 k=3    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=4    SUCCESS
 		Generated szTransHamiltonian N=9 k=4    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=5    SUCCESS
 		Generated szTransHamiltonian N=9 k=5    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=6    SUCCESS
 		Generated szTransHamiltonian N=9 k=6    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=7    SUCCESS
 		Generated szTransHamiltonian N=9 k=7    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=8    SUCCESS
 		Generated szTransHamiltonian N=9 k=8    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 	Comparing sz basis and szTrans basis eigenvalues    SUCCESS
 Testing Jxy=2 Jz=1 Hz=0 N=10 (2,1,0,10)
 	Generating szBasis    SUCCESS
@@ -218,34 +359,64 @@ Testing Jxy=2 Jz=1 Hz=0 N=10 (2,1,0,10)
 	Comparing Naive Lanczos / Arpack Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=0    SUCCESS
 		Generated szTransHamiltonian N=10 k=0    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=1    SUCCESS
 		Generated szTransHamiltonian N=10 k=1    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=2    SUCCESS
 		Generated szTransHamiltonian N=10 k=2    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=3    SUCCESS
 		Generated szTransHamiltonian N=10 k=3    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=4    SUCCESS
 		Generated szTransHamiltonian N=10 k=4    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=5    SUCCESS
 		Generated szTransHamiltonian N=10 k=5    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=6    SUCCESS
 		Generated szTransHamiltonian N=10 k=6    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=7    SUCCESS
 		Generated szTransHamiltonian N=10 k=7    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=8    SUCCESS
 		Generated szTransHamiltonian N=10 k=8    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=9    SUCCESS
 		Generated szTransHamiltonian N=10 k=9    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 	Comparing sz basis and szTrans basis eigenvalues    SUCCESS
 Testing Jxy=2 Jz=1 Hz=3 N=9 (2,1,3,9)
 	Generating szBasis    SUCCESS
@@ -261,31 +432,58 @@ Testing Jxy=2 Jz=1 Hz=3 N=9 (2,1,3,9)
 	Comparing Naive Lanczos / Arpack Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=0    SUCCESS
 		Generated szTransHamiltonian N=9 k=0    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=1    SUCCESS
 		Generated szTransHamiltonian N=9 k=1    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=2    SUCCESS
 		Generated szTransHamiltonian N=9 k=2    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=3    SUCCESS
 		Generated szTransHamiltonian N=9 k=3    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=4    SUCCESS
 		Generated szTransHamiltonian N=9 k=4    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=5    SUCCESS
 		Generated szTransHamiltonian N=9 k=5    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=6    SUCCESS
 		Generated szTransHamiltonian N=9 k=6    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=7    SUCCESS
 		Generated szTransHamiltonian N=9 k=7    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=9 k=8    SUCCESS
 		Generated szTransHamiltonian N=9 k=8    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 	Comparing sz basis and szTrans basis eigenvalues    SUCCESS
 Testing Jxy=2 Jz=1 Hz=3 N=10 (2,1,3,10)
 	Generating szBasis    SUCCESS
@@ -301,32 +499,62 @@ Testing Jxy=2 Jz=1 Hz=3 N=10 (2,1,3,10)
 	Comparing Naive Lanczos / Arpack Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=0    SUCCESS
 		Generated szTransHamiltonian N=10 k=0    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=1    SUCCESS
 		Generated szTransHamiltonian N=10 k=1    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=2    SUCCESS
 		Generated szTransHamiltonian N=10 k=2    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=3    SUCCESS
 		Generated szTransHamiltonian N=10 k=3    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=4    SUCCESS
 		Generated szTransHamiltonian N=10 k=4    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=5    SUCCESS
 		Generated szTransHamiltonian N=10 k=5    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=6    SUCCESS
 		Generated szTransHamiltonian N=10 k=6    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=7    SUCCESS
 		Generated szTransHamiltonian N=10 k=7    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=8    SUCCESS
 		Generated szTransHamiltonian N=10 k=8    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 		Generated szTransBasis N=10 k=9    SUCCESS
 		Generated szTransHamiltonian N=10 k=9    SUCCESS
+	Generating solver    SUCCESS
 		Running exact solver    SUCCESS
+		Running naive Lanczos solver    SUCCESS
+		Comparing Naive Lanczos / exact first eigenvalues    SUCCESS
 	Comparing sz basis and szTrans basis eigenvalues    SUCCESS

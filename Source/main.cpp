@@ -21,86 +21,6 @@
 #include "szBasis.hpp"
 #include "szTransBasis.hpp"
 
-void exactSolve(szTransBasis * basis, szTransHamiltonian * Hamiltonian, double* EigenValues);
-void exactSolve(szTransBasis * basis, szTransHamiltonian * Hamiltonian, double* EigenValues, std::complex<double>** EigenVectors);
-
-void exactSolve(szTransBasis * basis, szTransHamiltonian * Hamiltonian, double* EigenValues) {
-	exactSolve(basis, Hamiltonian, EigenValues, NULL);
-}
-
-void exactSolve(szTransBasis * basis, szTransHamiltonian * Hamiltonian, double* EigenValues, std::complex<double>** EigenVectors) {
-	int len = basis->getLen();
-
-	std::complex<double>** HMatrix = new std::complex<double>*[len];
-	HMatrix[0] = new std::complex<double>[len*len];
-	for (int i = 1; i < len; i++) HMatrix[i] = HMatrix[i - 1] + len;
-
-	Hamiltonian->toMatrix(HMatrix);
-	if (EigenVectors == NULL)
-		utils::diagnolize(len, HMatrix, EigenValues);
-	else {
-		utils::diagnolize(len, HMatrix, EigenValues,"V");
-		for (int i=0; i<len; i++)
-			for (int j=0; j<len; j++) EigenVectors[i][j] = HMatrix[i][j];
-	}
-
-	printf("  Eigenvalues:\n");
-	for (int i=0; i < std::min(5,len); i++) printf("\t%.20f\n",EigenValues[i]);
-
-	delete[] HMatrix[0];
-	delete[] HMatrix;
-}
-
-void szTransTest() {
-	double Jxy, Jz, Hz;
-	bool cyclic;
-	int N;
-
-	Jxy = 1;
-	Jz = 1;
-	Hz = 0;
-	cyclic = true;
-	N = 20;
-	int szTot = 10;
-
-	// regular sz basis exact diagonalization
-	std::clock_t sz0 = std::clock();
-	szBasis * s = new szBasis(N,szTot);
-	szHamiltonian * H = new szHamiltonian(Jxy,Jz,Hz,cyclic,s);
-	HamiltonianBlockSolver solver = HamiltonianBlockSolver(s,H);
-	double* Eigenvalues1 = new double[s->getCombs()];
-	//solver.exactSolve(Eigenvalues1);
-	std::clock_t sz1 = std::clock();
-
-	// sz translation basis exact diagonalization
-	std::clock_t szT0 = std::clock();
-	szTransBasis * basis;
-	szTransHamiltonian * Hamiltonian;
-	double* Eigenvalues2 = new double[s->getCombs()];
-	int evPointer = 0;
-
-	for (int k=0; k<N; k++) {
-		basis = new szTransBasis(N,szTot,k);
-		Hamiltonian = new szTransHamiltonian(Jxy,Jz,Hz,basis);
-		exactSolve(basis, Hamiltonian, Eigenvalues2 + evPointer);
-		evPointer += basis->getLen();
-		delete Hamiltonian;
-		delete basis;
-	}
-	std::sort(Eigenvalues2,Eigenvalues2 + s->getCombs());
-	std::clock_t szT1 = std::clock();
-
-	/*printf("\nEigenvalues:\n");
-	for (int i=0; i<s->getCombs(); i++)
-		printf("\t%+.20f\t%+.20f\t%d\n", Eigenvalues1[i], Eigenvalues2[i], abs(Eigenvalues1[i] -Eigenvalues2[i]) < 0.000000000000001);/**/
-
-	printf("sz basis:\t%.2f\nszT basis:\t%.2f\n", double(sz1 - sz0) / CLOCKS_PER_SEC, double(szT1 - szT0) / CLOCKS_PER_SEC);
-
-	delete[] Eigenvalues1;
-	delete[] Eigenvalues2;
-	delete H;
-	delete s;
-}
 
 void arpackBenchmark() {
 	double Jxy = 1, Jz = 1, Hz = 0;
@@ -109,7 +29,7 @@ void arpackBenchmark() {
 
 	szBasis* basis = new szBasis(N, N/2);
 	szHamiltonian* Hamiltonian = new szHamiltonian(Jxy,Jz,Hz,cyclic,basis);
-	HamiltonianBlockSolver* solver = new HamiltonianBlockSolver(basis, Hamiltonian);
+	HamiltonianBlockSolver<double> * solver = new HamiltonianBlockSolver<double>(basis, Hamiltonian);
 
 	double* EigenValues;
 	double* baseState = new double[basis->getCombs()];
@@ -152,115 +72,20 @@ void arpackBenchmark() {
 }
 
 void firstEnergyGap() {
-	double Jxy = 2, Jz = 2, Hz = 0;
-	bool cyclic = true;
-	int N;
-	int numOfEv = 3;
-	int minN = 3, maxN = 26;
-
-	szBasis* basis;
-	szHamiltonian* Hamiltonian;
-	HamiltonianBlockSolver* solver;
-	double** NEigenValues = new double*[maxN];
-	NEigenValues[0] = new double[maxN*numOfEv];
-	for (int i = 1; i < maxN; i++) NEigenValues[i] = NEigenValues [i - 1] + numOfEv;
-
-	int* NIterations = new int[maxN];
-	double* NHTime = new double[maxN];
-	double* NSolveTime = new double[maxN];
-
-	double* EigenValues;
-	double* baseState;
-
-	clock_t t1;
-	clock_t t2;
-
-	// Solve for different Ns
-	for (N=minN; N<=maxN; N++) {
-		printf("N = %d\n",N);
-
-		// initialize system (precalc Hamiltonian)
-		t1 = std::clock();
-		basis = new szBasis(N, N/2);
-		Hamiltonian = new szHamiltonian(Jxy,Jz,Hz,cyclic,basis);
-		solver = new HamiltonianBlockSolver(basis, Hamiltonian);
-		t2 = std::clock();
-		NHTime[N-1] = double(t2 - t1) / CLOCKS_PER_SEC;
-
-		t1 = t2;
-		if (N < 12) { // exact solve
-			EigenValues = new double[basis->getCombs()];
-			solver->exactSolve(EigenValues);
-			NIterations[N-1] = 0;
-		}
-		else { // arpack solve
-			EigenValues = new double[numOfEv];
-			baseState = new double[basis->getCombs()];
-			basis->newState(baseState, 0);
-			//NIterations[N-1] = solver->naiveLanczos(EigenValues, 2, 500, baseState);
-			NIterations[N-1] = solver->arpackLanczos(EigenValues, numOfEv, 500, baseState);
-			delete[] baseState;
-		}
-
-		// save eigenvalues
-		for (int i=0; i<numOfEv; i++) NEigenValues[N-1][i] = EigenValues[i];
-		t2 = std::clock();
-		NSolveTime[N-1] = double(t2 - t1) / CLOCKS_PER_SEC;
-
-		delete[] EigenValues;
-		delete solver;
-		delete Hamiltonian;
-		delete basis;
-	}
-
-
-	// save output
-	char buffer [50];
-	sprintf(buffer,"../Output/minN_%d-maxN_%d-Jxy_%.1f-Jz_%.1f-Hz_%.1f-cyc_%d.xls", minN, maxN, Jxy, Jz, Hz, cyclic);
-	FILE * file = fopen(buffer, "w");
-
-	// headers
-	fprintf(file, "N\tIterations\tHTime\tSolveTime\tEvDiff");
-	for (int i=0; i<numOfEv; i++) fprintf(file, "\tEigenValue%d",i+1);
-	fprintf(file, "\n");
-
-	double EvDiff;
-	for (N=minN; N<=maxN; N++) {
-		//calc energy gap
-		EvDiff = NEigenValues[N-1][0]-NEigenValues[N-1][1];
-		if (fabs(EvDiff) < 0.0000001) EvDiff = NEigenValues[N-1][1]-NEigenValues[N-1][2];
-
-		//printf("N=%d\t%d iteratrions\tEigenvalue Diff: %.5f\n",N,NIterations[N],EvDiff);
-		fprintf(file, "%d\t%d\t%.2f\t%.2f\t%.5f",N, NIterations[N-1], NHTime[N-1], NSolveTime[N-1], EvDiff);
-		for (int i=0; i<numOfEv; i++) fprintf(file, "\t%.20f",NEigenValues[N-1][i]);
-		fprintf(file, "\n");
-
-		//printf("\tEigenvalue:\n");
-		//for (int i=0; i<numOfEv; i++) printf("\t\t%.20f\n",NEigenValues[N-1][i]);
-	}
-	fclose(file);
-
-	delete[] NEigenValues[0];
-	delete[] NEigenValues;
-	delete[] NIterations;
-	delete[] NHTime;
-	delete[] NSolveTime;
-}
-
-void firstEnergyGap2() {
-	double Jxy = 2, Jz = 2, Hz = 0;
+	double Jxy = 2, Jz = 0, Hz = 0;
 	bool cyclic = true;
 	int N;
 	int minN = 4, maxN = 20;
 
 	szBasis* basis;
 	szHamiltonian* Hamiltonian;
-	HamiltonianBlockSolver* solver;
+	HamiltonianBlockSolver<double>* solver;
 
 	double* EigenValues;
 	double* baseState;
 	double* BaseEVs = new double[3];
 	double EvDiff;
+	int numOfEv = 2;
 
 	// open file
 	char buffer [50];
@@ -277,22 +102,23 @@ void firstEnergyGap2() {
 			// initialize system (precalc Hamiltonian)
 			basis = new szBasis(N, N/2 - i + 1);
 			Hamiltonian = new szHamiltonian(Jxy,Jz,Hz,cyclic,basis);
-			solver = new HamiltonianBlockSolver(basis, Hamiltonian);
+			solver = new HamiltonianBlockSolver<double>(basis, Hamiltonian);
 
 			if (N < 12) { // exact solve
 				EigenValues = new double[basis->getCombs()];
 				solver->exactSolve(EigenValues);
 			}
 			else { // arpack solve
-				EigenValues = new double[1];
+				EigenValues = new double[numOfEv];
 				baseState = new double[basis->getCombs()];
 				basis->newState(baseState, 0);
-				solver->arpackLanczos(EigenValues, 1, 500, baseState);
+				solver->arpackLanczos(EigenValues, numOfEv, 500, baseState);
+				//solver->naiveLanczos(EigenValues, numOfEv, 500, baseState);
 				delete[] baseState;
 			}
 
 			// save eigenvalues
-			BaseEVs[i] = EigenValues[0];
+			BaseEVs[i] = EigenValues[abs(1-i)];
 			delete[] EigenValues;
 			delete solver;
 			delete Hamiltonian;
@@ -319,11 +145,10 @@ void benchmarkSolvers() {
 
 	int minN=10, maxN=22;
 	int numOfEv = 1;
-	int combs;
 
 	szBasis * basis;
 	szHamiltonian * Hamiltonian;
-	HamiltonianBlockSolver * solver;
+	HamiltonianBlockSolver<double> * solver;
 	double* Eigenvalues1 = new double[numOfEv];
 	double* Eigenvalues2 = new double[numOfEv];
 	double** EigenVectors = NULL;
@@ -344,7 +169,7 @@ void benchmarkSolvers() {
 		printf("%d\n",N);
 		basis = new szBasis(N, N/2);
 		Hamiltonian = new szHamiltonian(Jxy,Jz,Hz,cyclic,basis);
-		solver = new HamiltonianBlockSolver(basis, Hamiltonian);
+		solver = new HamiltonianBlockSolver<double>(basis, Hamiltonian);
 		baseState = new double[basis->getCombs()];
 		EigenVectors = new double*[numOfEv];
 		EigenVectors[0] = new double[numOfEv * basis->getCombs()];
@@ -370,86 +195,107 @@ void benchmarkSolvers() {
 	delete[] Eigenvalues2;
 }
 
-void compareSolvers() {
+void szSolve () {
+	std::clock_t t00,t0,t1;
+
+	int N, szUp;
 	double Jxy, Jz, Hz;
-	bool cyclic;
-	int N;
 
 	Jxy = 1;
 	Jz = 1;
 	Hz = 0;
-	cyclic = true;
-	N = 10;
+	N = 27;
+	szUp = N/2;
 
-	szBasis * basis = new szBasis(N, N/2);
-	szHamiltonian * Hamiltonian = new szHamiltonian(Jxy,Jz,Hz,cyclic,basis);
-	//Hamiltonian->print();
-	int combs = basis->getCombs();
-
-	HamiltonianBlockSolver solver = HamiltonianBlockSolver(basis, Hamiltonian);
-	int numOfEv = 4;
-	double* baseState = new double[combs];
-	double* tmpState = new double[combs];
+	szBasis * sz;
+	szHamiltonian * szH;
+	HamiltonianBlockSolver<double> * realSolver;
 	double* EigenValues;
-	double** EigenVectors;
+	double* baseState;
 
-	EigenVectors= new double*[numOfEv];
-	EigenVectors[0] = new double[numOfEv * combs];
-	for (int i=1; i<numOfEv; i++) EigenVectors[i] = EigenVectors[i-1] + combs;
+	t0 = std::clock();
+	t00 = t0;
+	sz = new szBasis(N, szUp);
+	t1 = std::clock();
+	printf("Generated Basis: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
+	t0 = t1;
+	szH = new szHamiltonian(Jxy,Jz,Hz,true,sz);
+	t1 = std::clock();
+	printf("Generated Hamiltonian: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
+	t0 = t1;
+	EigenValues = new double[1];
+	baseState = new double[sz->getLen()];
 
-	// naive Lanczos
-	basis->newState(baseState, 0);
-	EigenValues = new double[numOfEv];
-	solver.naiveLanczos(EigenValues, EigenVectors, numOfEv, 500, baseState);
-	printf("\n");
-	for (int i=0; i<numOfEv; i++) {
-		for (int j=0; j<6; j++) printf("%.7f\t", EigenVectors[i][j]);
-		Hamiltonian->apply(EigenVectors[i],tmpState);
-		printf("\n\tnorm: %.3f\tEigenvalue: %.6f\n\n",
-				basis->scalarProd(EigenVectors[i],EigenVectors[i]),
-				tmpState[1]/EigenVectors[i][1]);
-	}
+	realSolver = new HamiltonianBlockSolver<double>(sz,szH);
+	sz->newState(baseState,0);
+	t1 = std::clock();
+	printf("Generated Solver: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
+	t0 = t1;
+	//realSolver->naiveLanczos(EigenValues, 1, 500, baseState);
+	realSolver->arpackLanczos(EigenValues, 1, 500, baseState);
+	t1 = std::clock();
+	printf("Naive Lanczos: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
+	t0 = t1;
+
 	delete[] EigenValues;
-	printf("\n");
-
-	// arpack Lanczos
-	EigenValues = new double[numOfEv];
-	basis->newState(baseState, 0);
-	solver.arpackLanczos(EigenValues, EigenVectors, numOfEv, 100, baseState);
-	printf("\n");
-	for (int i=0; i<numOfEv; i++) {
-		for (int j=0; j<6; j++) printf("%.7f\t", EigenVectors[i][j]);
-		Hamiltonian->apply(EigenVectors[i],tmpState);
-		printf("\n\tnorm: %.3f\tEigenvalue: %.6f\n\n",
-				basis->scalarProd(EigenVectors[i],EigenVectors[i]),
-				tmpState[1]/EigenVectors[i][1]);
-	}
-	delete[] EigenValues;
-	printf("\n");
 	delete[] baseState;
-	delete[] EigenVectors[0];
-	delete[] EigenVectors;
+	delete realSolver;
+	delete szH;
+	delete sz;
+	printf("Total: %.2f seconds\n", double(t1-t00) / CLOCKS_PER_SEC);
+}
 
-	// exact solve
-	EigenVectors = new double*[combs];
-	EigenVectors[0] = new double[combs * combs];
-	for (int i=1; i<combs; i++) EigenVectors[i] = EigenVectors[i-1] + combs;
-	EigenValues = new double[combs];
+void szTransSolve () {
+	std::clock_t t00, t0,t1;
 
-	solver.exactSolve(EigenValues, EigenVectors);
-	for (int i=0; i<numOfEv; i++) {
-		for (int j=0; j<6; j++) printf("%.7f\t", EigenVectors[i][j]);
-		Hamiltonian->apply(EigenVectors[i],tmpState);
-		printf("\n\tnorm: %.3f\tEigenvalue: %.6f\n",
-				basis->scalarProd(EigenVectors[i],EigenVectors[i]),
-				tmpState[1]/EigenVectors[i][1]);
+	int N, szUp, k;
+	double Jxy, Jz, Hz;
+
+	Jxy = 1;
+	Jz = 1;
+	Hz = 0;
+	N = 22;
+	szUp = N/2;
+
+	szTransBasis * szT;
+	szTransHamiltonian * szTH;
+	double* EigenValues;
+	std::complex<double>* baseState;
+	t00 = std::clock();
+	for (k=0; k<N; k++) {
+		printf("\nk=%d\n==================================\n",k);
+		t0 = std::clock();
+		szT = new szTransBasis(N, szUp, k);
+		t1 = std::clock();
+		printf("Generated Basis: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
+		t0 = t1;
+		szTH = new szTransHamiltonian(Jxy,Jz,Hz,szT);
+		t1 = std::clock();
+		printf("Generated Hamiltonian: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
+		t0 = t1;
+		EigenValues = new double[1];
+		baseState = new std::complex<double>[szT->getLen()];
+
+		HamiltonianBlockSolver<std::complex<double> >* complexSolver;
+		complexSolver = new HamiltonianBlockSolver<std::complex<double> >(szT,szTH);
+		//complexSolver->exactSolve(EigenValues);
+		szT->newState(baseState,0);
+		t1 = std::clock();
+		printf("Generated Solver: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
+		t0 = t1;
+		complexSolver->naiveLanczos(EigenValues, 1, 500, baseState);
+		//complexSolver->arpackLanczos(EigenValues, 1, 500, baseState);
+		t1 = std::clock();
+		printf("Naive Lanczos: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
+		t0 = t1;
+
+		delete[] EigenValues;
+		delete[] baseState;
+		delete complexSolver;
+		delete szTH;
+		delete szT;
 	}
-
-	delete[] EigenValues;
-	delete[] EigenVectors[0];
-	delete[] EigenVectors;
-
-	delete[] tmpState;
+	printf("Total: %.2f seconds\n", double(t1-t00) / CLOCKS_PER_SEC);
 }
 
 void tester(const char* logfile, const char* errorfile) {
@@ -486,7 +332,8 @@ void tester(const char* logfile, const char* errorfile) {
 	szTransBasis * szT;
 	szHamiltonian * szH;
 	szTransHamiltonian * szTH;
-	HamiltonianBlockSolver * solver;
+	HamiltonianBlockSolver<double> * realSolver;
+	HamiltonianBlockSolver<std::complex<double> >* complexSolver;
 	double * szExactEV;
 	double * szNaiveLanEV;
 	double * szArpackLanEV;
@@ -494,9 +341,11 @@ void tester(const char* logfile, const char* errorfile) {
 	double * szBaseState;
 	double * szTmpState;
 	double * szTransExactEV;
+	double * szTransNaiveLanEV;
+	std::complex<double> * szTransBaseState;
 	int szTransInd;
 
-	int N, szUp, k;
+	int N, k;
 	double Jxy, Jz, Hz;
 	bool cyclic = true;
 	Jz = 1;
@@ -515,7 +364,7 @@ void tester(const char* logfile, const char* errorfile) {
 				utils::logprintf(logfile, "    SUCCESS\n");
 
 				utils::logprintf(logfile, "\tGenerating solver");
-				solver = new HamiltonianBlockSolver(sz,szH);
+				realSolver = new HamiltonianBlockSolver<double>(sz,szH);
 				szBaseState = new double[sz->getLen()];
 				szTmpState = new double[sz->getLen()];
 				utils::logprintf(logfile, "    SUCCESS\n");
@@ -523,14 +372,14 @@ void tester(const char* logfile, const char* errorfile) {
 				// exact solve
 				utils::logprintf(logfile, "\tRunning exact solver");
 				szExactEV = new double[sz->getLen()];
-				solver->exactSolve(szExactEV);
+				realSolver->exactSolve(szExactEV);
 				utils::logprintf(logfile, "    SUCCESS\n");
 
 				// compare first 5 eigenvalues between exact diagonalization and arpack Lanczos
 				utils::logprintf(logfile, "\tRunning arpack Lanczos solver for 5 eigenvalues, no eigenvectors");
 				szArpackLanEV = new double[5];
 				sz->newState(szBaseState, 0);
-				solver->arpackLanczos(szArpackLanEV,5,500,szBaseState);
+				realSolver->arpackLanczos(szArpackLanEV,5,500,szBaseState);
 				utils::logprintf(logfile, "    SUCCESS\n");
 
 				utils::logprintf(logfile, "\t\tComparing results");
@@ -559,7 +408,7 @@ void tester(const char* logfile, const char* errorfile) {
 				utils::logprintf(logfile, "\tRunning arpack Lanczos solver for 2 eigenvalues with eigenvectors");
 				szArpackLanEV = new double[2];
 				sz->newState(szBaseState, 0);
-				solver->arpackLanczos(szArpackLanEV,szEigenVectors,2,500,szBaseState);
+				realSolver->arpackLanczos(szArpackLanEV,szEigenVectors,2,500,szBaseState);
 				utils::logprintf(logfile, "    SUCCESS\n");
 				utils::logprintf(logfile, "\t\tComparing results");
 				test = true;
@@ -581,7 +430,7 @@ void tester(const char* logfile, const char* errorfile) {
 				utils::logprintf(logfile, "\tRunning naive Lanczos solver for 2 eigenvalues with eigenvectors");
 				szNaiveLanEV = new double[2];
 				sz->newState(szBaseState, 0);
-				solver->naiveLanczos(szNaiveLanEV,szEigenVectors,2,500,szBaseState);
+				realSolver->naiveLanczos(szNaiveLanEV,szEigenVectors,2,500,szBaseState);
 				utils::logprintf(logfile, "    SUCCESS\n");
 				utils::logprintf(logfile, "\t\tComparing results");
 				test = true;
@@ -619,6 +468,7 @@ void tester(const char* logfile, const char* errorfile) {
 				// szTrans basis
 				szTransExactEV = new double[sz->getLen()];
 				szTransInd = 0;
+				szTransNaiveLanEV = new double[1];
 
 				for (k=0; k<N; k++) {
 					utils::logprintf(logfile, "\t\tGenerated szTransBasis N=%d k=%d", N, k);
@@ -628,14 +478,38 @@ void tester(const char* logfile, const char* errorfile) {
 					szTH = new szTransHamiltonian(Jxy,Jz,Hz,szT);
 					utils::logprintf(logfile, "    SUCCESS\n");
 
-					utils::logprintf(logfile, "\t\tRunning exact solver");
-					exactSolve(szT, szTH, szTransExactEV + szTransInd);
+					utils::logprintf(logfile, "\tGenerating solver");
+					complexSolver = new HamiltonianBlockSolver<std::complex<double> >(szT,szTH);
 					utils::logprintf(logfile, "    SUCCESS\n");
+					utils::logprintf(logfile, "\t\tRunning exact solver");
+					complexSolver->exactSolve(szTransExactEV + szTransInd);
+					utils::logprintf(logfile, "    SUCCESS\n");
+
+					utils::logprintf(logfile, "\t\tRunning naive Lanczos solver");
+					szTransBaseState = new std::complex<double>[szT->getLen()];
+					szT->newState(szTransBaseState, 0);
+					complexSolver->naiveLanczos(szTransNaiveLanEV,1,500,szTransBaseState);
+					delete[] szTransBaseState;
+					utils::logprintf(logfile, "    SUCCESS\n");
+					delete complexSolver;
+
+					// first eigenvalues
+					utils::logprintf(logfile, "\t\tComparing Naive Lanczos / exact first eigenvalues");
+					if (abs(szTransNaiveLanEV[0]-szTransExactEV[szTransInd]) < tol)
+						utils::logprintf(logfile, "    SUCCESS\n");
+					else {
+						utils::logprintf(logfile, "    FAILURE\n");
+						utils::logprintf(errorfile, "%s k=%d Naive Lanczos / exact first eigenvalues don't match \n",k,paramsStr);
+						utils::logprintf(errorfile, "%\t%.15f\t%.15f\n",szTransNaiveLanEV[0],szTransExactEV[szTransInd]);
+						errors++;
+					}
 
 					szTransInd += szT->getLen();
 					delete szTH;
 					delete szT;
+
 				}
+				delete[] szTransNaiveLanEV;
 
 				utils::logprintf(logfile, "\tComparing sz basis and szTrans basis eigenvalues");
 				std::sort(szTransExactEV,szTransExactEV + sz->getLen());
@@ -654,7 +528,7 @@ void tester(const char* logfile, const char* errorfile) {
 				delete[] szExactEV;
 				delete[] szTransExactEV;
 
-				delete solver;
+				delete realSolver;
 				delete szH;
 				delete sz;
 			}
@@ -666,14 +540,16 @@ void tester(const char* logfile, const char* errorfile) {
 
 }
 
+
 int main(int argc, char* argv[])
 {
-	//firstEnergyGap2();
+	//firstEnergyGap();
 	//arpackBenchmark();
-	//compareSolvers();
 	//szTransTest();
 	//benchmarkSolvers();
-	tester("../Logs/tester.log","../Logs/tester.err");
+	//tester("../Logs/tester.log","../Logs/tester.err");
+	szTransSolve();
+	//szSolve();
 
 	return 0;
 }

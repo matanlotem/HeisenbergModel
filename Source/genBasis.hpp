@@ -12,6 +12,7 @@
 template <class T>
 class genBasis {
 public:
+	virtual ~genBasis();
 	virtual int getLen() = 0;
 	virtual void newState(T* state) = 0;
 	virtual void newState(T* state, int ) = 0;
@@ -20,5 +21,7 @@ public:
 	virtual double getStateNorm(T* state) = 0;
 	virtual void printState(T* state) = 0;
 };
+
+template <class T> genBasis<T>::~genBasis() {}
 
 #endif /* SOURCE_GENBASIS_HPP_ */
