@@ -9,6 +9,7 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <complex>
 #include <ctime>
@@ -195,16 +196,44 @@ void benchmarkSolvers() {
 	delete[] Eigenvalues2;
 }
 
-void szSolve () {
+void exactSolve(int N) {
+	int szUp;
+	double Jxy=1, Jz=1, Hz=0;
+
+	szBasis * basis;
+	szHamiltonian * Hamiltonian;
+	HamiltonianBlockSolver<double> * solver;
+	int numOfEv = 1<<N;
+	double * EigenValues = new double[numOfEv];
+	int evPointer = 0;
+
+	for (szUp = 0; szUp <= N; szUp++) {
+		basis = new szBasis(N,szUp);
+		Hamiltonian = new szHamiltonian(Jxy, Jz, Hz, false, basis);
+		solver = new HamiltonianBlockSolver<double>(basis, Hamiltonian);
+		solver->exactSolve(EigenValues + evPointer);
+		evPointer += basis->getLen();
+		delete solver;
+		delete Hamiltonian;
+		delete basis;
+	}
+	std::sort(EigenValues, EigenValues + numOfEv);
+	for (int i=0; i<numOfEv; i++) printf("%.2f\t",EigenValues[i]);
+	printf("\n");
+	delete[] EigenValues;
+}
+
+void szSolve (int N) {
 	std::clock_t t00,t0,t1;
 
-	int N, szUp;
+	int szUp;
 	double Jxy, Jz, Hz;
+	bool cyclic = false;
+	int numOfEv = 1;
 
 	Jxy = 1;
 	Jz = 1;
 	Hz = 0;
-	N = 27;
 	szUp = N/2;
 
 	szBasis * sz;
@@ -219,11 +248,11 @@ void szSolve () {
 	t1 = std::clock();
 	printf("Generated Basis: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
 	t0 = t1;
-	szH = new szHamiltonian(Jxy,Jz,Hz,true,sz);
+	szH = new szHamiltonian(Jxy,Jz,Hz,cyclic,sz);
 	t1 = std::clock();
 	printf("Generated Hamiltonian: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
 	t0 = t1;
-	EigenValues = new double[1];
+	EigenValues = new double[numOfEv];
 	baseState = new double[sz->getLen()];
 
 	realSolver = new HamiltonianBlockSolver<double>(sz,szH);
@@ -232,7 +261,7 @@ void szSolve () {
 	printf("Generated Solver: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
 	t0 = t1;
 	//realSolver->naiveLanczos(EigenValues, 1, 500, baseState);
-	realSolver->arpackLanczos(EigenValues, 1, 500, baseState);
+	realSolver->arpackLanczos(EigenValues, numOfEv, 500, baseState);
 	t1 = std::clock();
 	printf("Naive Lanczos: %.2f seconds\n", double(t1-t0) / CLOCKS_PER_SEC);
 	t0 = t1;
@@ -543,13 +572,19 @@ void tester(const char* logfile, const char* errorfile) {
 
 int main(int argc, char* argv[])
 {
+	int N = 16;
+	if (argc > 1) {
+		std::istringstream iss(argv[1]);
+		if (iss >> N) {};
+	}
 	//firstEnergyGap();
 	//arpackBenchmark();
 	//szTransTest();
 	//benchmarkSolvers();
 	//tester("../Logs/tester.log","../Logs/tester.err");
-	szTransSolve();
-	//szSolve();
+	//szTransSolve();
+	szSolve(N);
+	//exactSolve(N);
 
 	return 0;
 }

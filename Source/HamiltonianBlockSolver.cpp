@@ -282,7 +282,7 @@ int HamiltonianBlockSolver<T>::arpackLanczos(double* EigenValues, int numOfEv, i
 
 template <class T>
 int HamiltonianBlockSolver<T>::arpackLanczos(double* EigenValues, T** EigenVectors, int numOfEv, int iterations, T* baseState) {
-	return arpackLanczos(EigenValues, EigenVectors, numOfEv, iterations, baseState, 0.0, -1);
+	return arpackLanczos(EigenValues, EigenVectors, numOfEv, iterations, baseState, 0.00000001, -1);
 }
 
 template <class T>
